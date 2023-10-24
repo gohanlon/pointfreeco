@@ -1,6 +1,8 @@
 import Foundation
+import MemberwiseInit
 import Tagged
 
+@MemberwiseInit(.public)
 public struct VimeoVideo: Decodable, Equatable {
   public let created: Date
   public let description: String?
@@ -10,12 +12,9 @@ public struct VimeoVideo: Decodable, Equatable {
 
   public typealias ID = Tagged<Self, Int>
 
+  @MemberwiseInit(.public)
   public struct Privacy: Decodable, Equatable {
     public let view: View?
-
-    public init(view: View?) {
-      self.view = view
-    }
 
     public enum View: String, Decodable {
       case anybody
@@ -26,20 +25,6 @@ public struct VimeoVideo: Decodable, Equatable {
   public enum VideoType: String, Decodable {
     case live
     case video
-  }
-
-  public init(
-    created: Date,
-    description: String?,
-    name: String,
-    privacy: Privacy,
-    type: VideoType
-  ) {
-    self.created = created
-    self.description = description
-    self.name = name
-    self.privacy = privacy
-    self.type = type
   }
 
   enum CodingKeys: String, CodingKey {

@@ -1,4 +1,4 @@
-// swift-tools-version:5.7
+// swift-tools-version:5.9
 
 import Foundation
 import PackageDescription
@@ -42,6 +42,7 @@ var package = Package(
   dependencies: [
     .package(url: "https://github.com/apple/swift-log", from: "1.0.0"),
     .package(url: "https://github.com/apple/swift-nio", from: "2.54.0"),
+    .package(url: "https://github.com/gohanlon/swift-memberwise-init-macro", branch: "main"),
     .package(url: "https://github.com/ianpartridge/swift-backtrace", exact: "1.3.1"),
     .package(url: "https://github.com/swift-server/async-http-client", from: "1.13.2"),
     .package(url: "https://github.com/vapor/postgres-kit", exact: "2.2.0"),
@@ -78,6 +79,7 @@ var package = Package(
         "Stripe",
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "Logging", package: "swift-log"),
+        .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro"),
         .product(name: "PostgresKit", package: "postgres-kit"),
         .product(name: "Tagged", package: "swift-tagged"),
         .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
@@ -120,6 +122,8 @@ var package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "Either", package: "swift-prelude"),
         .product(name: "Logging", package: "swift-log"),
+        // NB: Adding "Tagged" purely to satisfy `swift build --explicit-target-dependency-import-check error`
+        .product(name: "Tagged", package: "swift-tagged"),
         .product(name: "UrlFormEncoding", package: "swift-web"),
       ]
     ),
@@ -157,6 +161,7 @@ var package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "Either", package: "swift-prelude"),
         .product(name: "Logging", package: "swift-log"),
+        .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro"),
         .product(name: "Tagged", package: "swift-tagged"),
         .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
       ]
@@ -205,6 +210,7 @@ var package = Package(
         .product(name: "HttpPipeline", package: "swift-web"),
         .product(name: "Either", package: "swift-prelude"),
         .product(name: "Logging", package: "swift-log"),
+        .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro"),
         .product(name: "UrlFormEncoding", package: "swift-web"),
         .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
       ]
@@ -217,6 +223,7 @@ var package = Package(
         "GitHub",
         "Stripe",
         .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro"),
         .product(name: "Overture", package: "swift-overture"),
         .product(name: "Tagged", package: "swift-tagged"),
         .product(name: "TaggedTime", package: "swift-tagged"),
@@ -282,6 +289,7 @@ var package = Package(
         .product(name: "HtmlPlainTextPrint", package: "swift-web"),
         .product(name: "HttpPipeline", package: "swift-web"),
         .product(name: "HttpPipelineHtmlSupport", package: "swift-web"),
+        .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro"),
         .product(name: "Overture", package: "swift-overture"),
         .product(name: "PostgresKit", package: "postgres-kit"),
         .product(name: "Tagged", package: "swift-tagged"),
@@ -409,6 +417,7 @@ var package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "Either", package: "swift-prelude"),
         .product(name: "Logging", package: "swift-log"),
+        .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro"),
         .product(name: "Tagged", package: "swift-tagged"),
         .product(name: "TaggedMoney", package: "swift-tagged"),
         .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
@@ -465,6 +474,7 @@ var package = Package(
       dependencies: [
         "Models",
         .product(name: "Html", package: "swift-html"),
+        .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro"),
       ]
     ),
 
@@ -505,6 +515,7 @@ var package = Package(
       dependencies: [
         "DecodableRequest",
         "FoundationPrelude",
+        .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro"),
         .product(name: "Tagged", package: "swift-tagged"),
       ]
     ),
@@ -525,6 +536,7 @@ var package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "Html", package: "swift-html"),
         .product(name: "HttpPipeline", package: "swift-web"),
+        .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro"),
         .product(name: "Prelude", package: "swift-prelude"),
         .product(name: "Tagged", package: "swift-tagged"),
         .product(name: "TaggedTime", package: "swift-tagged"),

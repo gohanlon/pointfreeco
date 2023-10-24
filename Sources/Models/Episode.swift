@@ -1,82 +1,47 @@
 import Dependencies
 import Foundation
+import MemberwiseInit
 import Tagged
 import TaggedTime
 
+@MemberwiseInit(.public)
 public struct Episode: Equatable, Identifiable {
-  public var alternateSlug: String?
+  public var alternateSlug: String? = nil
   public var blurb: String
-  public var codeSampleDirectory: String?
-  public var exercises: [Exercise]
-  public var format: Format
-  public private(set) var _fullVideo: Video?
+  public var codeSampleDirectory: String? = nil
+  public var exercises: [Exercise] = []
+  public var format: Format = .prerecorded
+  @Init(.public, label: "fullVideo") public private(set) var _fullVideo: Video? = nil
   public var id: Tagged<Self, Int>
-  public var image: String
+  @Init(label: "image") public var _image: String? = nil
   public var length: Seconds<Int>
   public var permission: Permission
   public var publishedAt: Date
-  public var questions: [Question]
-  public var references: [Reference]
+  public var questions: [Question] = []
+  public var references: [Reference] = []
   public var sequence: Sequence
-  public var subtitle: String?
+  public var subtitle: String? = nil
   public var title: String
   public var trailerVideo: Video
-  public var _transcriptBlocks: [TranscriptBlock]?
+  @Init(label: "transcriptBlocks") public var _transcriptBlocks: [TranscriptBlock]? = nil
 
-  public init(
-    alternateSlug: String? = nil,
-    blurb: String,
-    codeSampleDirectory: String? = nil,
-    exercises: [Exercise] = [],
-    format: Format = .prerecorded,
-    fullVideo: Video? = nil,
-    id: ID,
-    image: String? = nil,
-    length: Seconds<Int>,
-    permission: Permission,
-    publishedAt: Date,
-    questions: [Question] = [],
-    references: [Reference] = [],
-    sequence: Sequence,
-    subtitle: String? = nil,
-    title: String,
-    trailerVideo: Video,
-    transcriptBlocks: [TranscriptBlock]? = nil
-  ) {
-    self.alternateSlug = alternateSlug
-    self.blurb = blurb
-    self.codeSampleDirectory = codeSampleDirectory
-    self.exercises = exercises
-    self.format = format
-    self._fullVideo = fullVideo
-    self.id = id
-    self.image =
-      image
-      ?? .init(
-        format: "https://d3rccdn33rt8ze.cloudfront.net/episodes/%04d.jpeg", sequence.rawValue
-      )
-    self.length = length
-    self.permission = permission
-    self.publishedAt = publishedAt
-    self.questions = questions
-    self.references = references
-    self.sequence = sequence
-    self.subtitle = subtitle
-    self.title = title
-    self.trailerVideo = trailerVideo
-    self._transcriptBlocks = transcriptBlocks
+  public var image: String {
+    get {
+      self._image
+        ?? .init(
+          format: "https://d3rccdn33rt8ze.cloudfront.net/episodes/%04d.jpeg", sequence.rawValue
+        )
+    }
+    set {
+      self._image = newValue
+    }
   }
 
+  @MemberwiseInit(.public)
   public struct Question: Equatable {
     public var answer: String
     public var question: String
     public var timestamp: Int
-
-    public init(answer: String, question: String, timestamp: Int) {
-      self.answer = answer
-      self.question = question
-      self.timestamp = timestamp
-    }
   }
 
   public var fullTitle: String {
@@ -113,20 +78,11 @@ public struct Episode: Equatable, Identifiable {
 
   public typealias Sequence = Tagged<(sequence: (), Self), Int>
 
+  @MemberwiseInit(.public)
   public struct Collection: Equatable {
     public var blurb: String
     public var sections: [Section]
     public var title: String
-
-    public init(
-      blurb: String,
-      sections: [Section],
-      title: String
-    ) {
-      self.blurb = blurb
-      self.sections = sections
-      self.title = title
-    }
 
     public init(
       section: Section
@@ -146,35 +102,16 @@ public struct Episode: Equatable, Identifiable {
       .init(rawValue: Models.slug(for: self.title))
     }
 
+    @MemberwiseInit(.public)
     public struct Section: Equatable {
-      public var alternateSlug: String?
+      public var alternateSlug: String? = nil
       public var blurb: String
       public var coreLessons: [Lesson]
-      public var isFinished: Bool
-      public var isHidden: Bool
+      public var isFinished: Bool = true
+      public var isHidden: Bool = false
       public var related: [Related]
       public var title: String
       public var whereToGoFromHere: String?
-
-      public init(
-        alternateSlug: String? = nil,
-        blurb: String,
-        coreLessons: [Lesson],
-        isFinished: Bool = true,
-        isHidden: Bool = false,
-        related: [Related],
-        title: String,
-        whereToGoFromHere: String?
-      ) {
-        self.alternateSlug = alternateSlug
-        self.blurb = blurb
-        self.coreLessons = coreLessons
-        self.isFinished = isFinished
-        self.isHidden = isHidden
-        self.related = related
-        self.title = title
-        self.whereToGoFromHere = whereToGoFromHere
-      }
 
       public var length: Seconds<Int> {
         self.coreLessons
@@ -186,27 +123,15 @@ public struct Episode: Equatable, Identifiable {
         self.alternateSlug.map(Slug.init(rawValue:)) ?? Slug(rawValue: Models.slug(for: self.title))
       }
 
+      @MemberwiseInit(.public)
       public struct Lesson: Equatable {
         public var episode: Episode
-
-        public init(
-          episode: Episode
-        ) {
-          self.episode = episode
-        }
       }
 
+      @MemberwiseInit(.public)
       public struct Related: Equatable {
         public var blurb: String
         public var content: Content
-
-        public init(
-          blurb: String,
-          content: Content
-        ) {
-          self.blurb = blurb
-          self.content = content
-        }
 
         public enum Content: Equatable {
           case episodes(@autoclosure () -> [Episode])
@@ -244,14 +169,10 @@ public struct Episode: Equatable, Identifiable {
     public typealias Slug = Tagged<Self, String>
   }
 
+  @MemberwiseInit(.public)
   public struct Exercise: Equatable {
     public var problem: String
-    public var solution: String?
-
-    public init(problem: String, solution: String? = nil) {
-      self.problem = problem
-      self.solution = solution
-    }
+    public var solution: String? = nil
   }
 
   public enum Format {
@@ -265,45 +186,21 @@ public struct Episode: Equatable, Identifiable {
     case subscriberOnly
   }
 
+  @MemberwiseInit(.public)
   public struct Reference: Codable, Equatable {
-    public var author: String?
-    public var blurb: String?
+    public var author: String? = nil
+    public var blurb: String? = nil
     public var link: String
-    public var publishedAt: Date?
+    public var publishedAt: Date? = nil
     public var title: String
-
-    public init(
-      author: String? = nil,
-      blurb: String? = nil,
-      link: String,
-      publishedAt: Date? = nil,
-      title: String
-    ) {
-      self.author = author
-      self.blurb = blurb
-      self.link = link
-      self.publishedAt = publishedAt
-      self.title = title
-    }
   }
 
+  @MemberwiseInit(.public)
   public struct TranscriptBlock: Codable, Equatable {
     public var content: String
-    public var speaker: String?
-    public var timestamp: Int?
+    public var speaker: String? = nil
+    public var timestamp: Int? = nil
     public var type: BlockType
-
-    public init(
-      content: String,
-      speaker: String? = nil,
-      timestamp: Int? = nil,
-      type: BlockType
-    ) {
-      self.content = content
-      self.speaker = speaker
-      self.timestamp = timestamp
-      self.type = type
-    }
 
     public enum BlockType: Codable, Equatable {
       case box(Box)
@@ -316,20 +213,11 @@ public struct Episode: Equatable, Identifiable {
       case title
       case video(poster: String, sources: [String])
 
+      @MemberwiseInit(.public)
       public struct Box: Codable, Equatable {
         public let title: String?
         public let backgroundColor: String
         public let borderColor: String
-
-        public init(
-          title: String?,
-          backgroundColor: String,
-          borderColor: String
-        ) {
-          self.backgroundColor = backgroundColor
-          self.borderColor = borderColor
-          self.title = title
-        }
 
         public init?(name: String) {
           switch name.lowercased() {
@@ -467,13 +355,14 @@ public struct Episode: Equatable, Identifiable {
     }
   }
 
+  @MemberwiseInit(.public)
   public struct Video: Codable, Equatable {
     public var bytesLength: Int
+    public var downloadUrls: DownloadUrls
     public var vimeoId: Int
-    public var downloadUrl: DownloadUrls
 
     public func downloadUrl(_ quality: Quality) -> String {
-      switch (self.downloadUrl, quality) {
+      switch (self.downloadUrls, quality) {
       case let (.s3(_, filename, _), .hd720), let (.s3(_, _, filename), .sd540):
         return "https://pointfreeco-episodes-processed.s3.amazonaws.com/\(filename).mp4"
       }
@@ -481,16 +370,6 @@ public struct Episode: Equatable, Identifiable {
 
     public var streamingSource: String {
       "https://player.vimeo.com/video/\(self.vimeoId)?pip=1"
-    }
-
-    public init(
-      bytesLength: Int,
-      downloadUrls: DownloadUrls,
-      vimeoId: Int
-    ) {
-      self.bytesLength = bytesLength
-      self.downloadUrl = downloadUrls
-      self.vimeoId = vimeoId
     }
 
     public enum DownloadUrls: Codable, Equatable {

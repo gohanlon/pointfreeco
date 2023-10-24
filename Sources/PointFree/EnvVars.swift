@@ -3,6 +3,7 @@ import Dependencies
 import Foundation
 import GitHub
 import Mailgun
+import MemberwiseInit
 import Models
 import Stripe
 import Tagged
@@ -17,53 +18,22 @@ public typealias StripeEndpointSecret = Stripe.Client.EndpointSecret
 public typealias StripePublishableKey = Stripe.Client.PublishableKey
 public typealias StripeSecretKey = Stripe.Client.SecretKey
 
+@MemberwiseInit(.public)
 public struct EnvVars: Codable {
-  public var appEnv: AppEnv
-  public var appSecret: AppSecret
-  public var baseUrl: URL
-  public var basicAuth: BasicAuth
-  public var emergencyMode: Bool
-  public var gitHub: GitHub
-  public var mailgun: Mailgun
-  public var port: Int
-  public var postgres: Postgres
-  public var regionalDiscountCouponId: Coupon.ID
-  public var rssUserAgentWatchlist: [String]
-  public var slackInviteURL: String
-  public var stripe: Stripe
-  public var vimeoBearer: String
-
-  public init(
-    appEnv: AppEnv = .development,
-    appSecret: AppSecret = "deadbeefdeadbeefdeadbeefdeadbeef",
-    baseUrl: URL = URL(string: "http://localhost:8080")!,
-    basicAuth: BasicAuth = BasicAuth(),
-    emergencyMode: Bool = false,
-    gitHub: GitHub = GitHub(),
-    mailgun: Mailgun = Mailgun(),
-    port: Int = 8080,
-    postgres: Postgres = Postgres(),
-    regionalDiscountCouponId: Coupon.ID = "regional-discount",
-    rssUserAgentWatchlist: [String] = [],
-    slackInviteURL: String = "http://slack.com",
-    stripe: Stripe = Stripe(),
-    vimeoBearer: String = ""
-  ) {
-    self.appEnv = appEnv
-    self.appSecret = appSecret
-    self.baseUrl = baseUrl
-    self.basicAuth = basicAuth
-    self.emergencyMode = emergencyMode
-    self.gitHub = gitHub
-    self.mailgun = mailgun
-    self.port = port
-    self.postgres = postgres
-    self.regionalDiscountCouponId = regionalDiscountCouponId
-    self.rssUserAgentWatchlist = rssUserAgentWatchlist
-    self.slackInviteURL = slackInviteURL
-    self.stripe = stripe
-    self.vimeoBearer = vimeoBearer
-  }
+  public var appEnv: AppEnv = .development
+  public var appSecret: AppSecret = "deadbeefdeadbeefdeadbeefdeadbeef"
+  public var baseUrl: URL = URL(string: "http://localhost:8080")!
+  public var basicAuth: BasicAuth = BasicAuth()
+  public var emergencyMode: Bool = false
+  public var gitHub: GitHub = GitHub()
+  public var mailgun: Mailgun = Mailgun()
+  public var port: Int = 8080
+  public var postgres: Postgres = Postgres()
+  public var regionalDiscountCouponId: Coupon.ID = "regional-discount"
+  public var rssUserAgentWatchlist: [String] = []
+  public var slackInviteURL: String = "http://slack.com"
+  public var stripe: Stripe = Stripe()
+  public var vimeoBearer: String = ""
 
   private enum CodingKeys: String, CodingKey {
     case appEnv = "APP_ENV"
@@ -84,17 +54,10 @@ public struct EnvVars: Codable {
     case testing
   }
 
+  @MemberwiseInit(.public)
   public struct BasicAuth: Codable {
-    public var username: String
-    public var password: String
-
-    public init(
-      username: String = "hello",
-      password: String = "world"
-    ) {
-      self.username = username
-      self.password = password
-    }
+    public var username: String = "hello"
+    public var password: String = "world"
 
     private enum CodingKeys: String, CodingKey {
       case username = "BASIC_AUTH_USERNAME"
@@ -102,17 +65,10 @@ public struct EnvVars: Codable {
     }
   }
 
+  @MemberwiseInit(.public)
   public struct GitHub: Codable {
-    public var clientId: GitHubClientId
-    public var clientSecret: GitHubClientSecret
-
-    public init(
-      clientId: GitHubClientId = "deadbeef-client-id",
-      clientSecret: GitHubClientSecret = "deadbeef-client-secret"
-    ) {
-      self.clientId = clientId
-      self.clientSecret = clientSecret
-    }
+    public var clientId: GitHubClientId = "deadbeef-client-id"
+    public var clientSecret: GitHubClientSecret = "deadbeef-client-secret"
 
     private enum CodingKeys: String, CodingKey {
       case clientId = "GITHUB_CLIENT_ID"
@@ -120,17 +76,10 @@ public struct EnvVars: Codable {
     }
   }
 
+  @MemberwiseInit(.public)
   public struct Mailgun: Codable {
-    public var apiKey: MailgunApiKey
-    public var domain: MailgunDomain
-
-    public init(
-      apiKey: MailgunApiKey = "key-deadbeefdeadbeefdeadbeefdeadbeef",
-      domain: MailgunDomain = "mg.domain.com"
-    ) {
-      self.apiKey = apiKey
-      self.domain = domain
-    }
+    public var apiKey: MailgunApiKey = "key-deadbeefdeadbeefdeadbeefdeadbeef"
+    public var domain: MailgunDomain = "mg.domain.com"
 
     private enum CodingKeys: String, CodingKey {
       case apiKey = "MAILGUN_PRIVATE_API_KEY"
@@ -138,36 +87,23 @@ public struct EnvVars: Codable {
     }
   }
 
+  @MemberwiseInit(.public)
   public struct Postgres: Codable {
     public typealias DatabaseUrl = Tagged<Self, String>
 
-    public var databaseUrl: DatabaseUrl
-
-    public init(
-      databaseUrl: DatabaseUrl = "postgres://pointfreeco:@localhost:5432/pointfreeco_development"
-    ) {
-      self.databaseUrl = databaseUrl
-    }
+    public var databaseUrl: DatabaseUrl =
+      "postgres://pointfreeco:@localhost:5432/pointfreeco_development"
 
     private enum CodingKeys: String, CodingKey {
       case databaseUrl = "DATABASE_URL"
     }
   }
 
+  @MemberwiseInit(.public)
   public struct Stripe: Codable {
     public var endpointSecret: StripeEndpointSecret = "whsec_test"
     public var publishableKey: StripePublishableKey = "pk_test"
     public var secretKey: StripeSecretKey = "sk_test"
-
-    public init(
-      endpointSecret: StripeEndpointSecret = "whsec_test",
-      publishableKey: StripePublishableKey = "pk_test",
-      secretKey: StripeSecretKey = "sk_test"
-    ) {
-      self.endpointSecret = endpointSecret
-      self.publishableKey = publishableKey
-      self.secretKey = secretKey
-    }
 
     private enum CodingKeys: String, CodingKey {
       case endpointSecret = "STRIPE_ENDPOINT_SECRET"

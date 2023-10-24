@@ -5,36 +5,24 @@ import Foundation
 import FunctionalCss
 import Html
 import HtmlCssSupport
+import MemberwiseInit
 import Models
 import PointFreePrelude
 import PointFreeRouter
 import Prelude
 import Styleguide
 
+@MemberwiseInit(.public)
 public struct EpisodePageData {
-  var context: Context
-  var emergencyMode: Bool
-  var episode: Episode
-  var episodeProgress: Int?
-  var permission: EpisodePermission
+  @Init(.public) var context: Context
+  @Init(.public) var emergencyMode: Bool
+  @Init(.public) var episode: Episode
+  @Init(.public) var episodeProgress: Int?
+  @Init(.public) var permission: EpisodePermission
 
   public enum Context {
     case collection(Episode.Collection)
     case direct(previousEpisode: Episode?, nextEpisode: Episode?)
-  }
-
-  public init(
-    context: Context,
-    emergencyMode: Bool,
-    episode: Episode,
-    episodeProgress: Int?,
-    permission: EpisodePermission
-  ) {
-    self.context = context
-    self.emergencyMode = emergencyMode
-    self.episode = episode
-    self.episodeProgress = episodeProgress
-    self.permission = permission
   }
 
   public var collection: Episode.Collection? {

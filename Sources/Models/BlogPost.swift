@@ -1,36 +1,18 @@
 import Dependencies
 import Foundation
+import MemberwiseInit
 import Tagged
 
+@MemberwiseInit(.public)
 public struct BlogPost: Equatable, Identifiable {
   public var author: Author?
   public var blurb: String
   public var contentBlocks: [Episode.TranscriptBlock]
   public var coverImage: String?
-  public var hidden: Bool
+  public var hidden: Bool = false
   public var id: Tagged<Self, Int>
   public var publishedAt: Date
   public var title: String
-
-  public init(
-    author: Author?,
-    blurb: String,
-    contentBlocks: [Episode.TranscriptBlock],
-    coverImage: String?,
-    hidden: Bool = false,
-    id: ID,
-    publishedAt: Date,
-    title: String
-  ) {
-    self.author = author
-    self.blurb = blurb
-    self.contentBlocks = contentBlocks
-    self.coverImage = coverImage
-    self.hidden = hidden
-    self.id = id
-    self.publishedAt = publishedAt
-    self.title = title
-  }
 
   public struct Video: Equatable {
     public var sources: [String]

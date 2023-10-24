@@ -1,30 +1,18 @@
 import Css
 import FunctionalCss
 import Html
+import MemberwiseInit
 import PointFreeRouter
 import Prelude
 import Styleguide
 
+@MemberwiseInit(.public)
 public struct Host {
   public var bio: String
   public var image: String
   public var name: String
   public var twitterRoute: TwitterRoute
   public var website: String
-
-  public init(
-    bio: String,
-    image: String,
-    name: String,
-    twitterRoute: TwitterRoute,
-    website: String
-  ) {
-    self.bio = bio
-    self.image = image
-    self.name = name
-    self.twitterRoute = twitterRoute
-    self.website = website
-  }
 }
 
 public let aboutExtraStyles = hostImgStyles <> hostBioStyles

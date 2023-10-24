@@ -7,6 +7,7 @@ import FoundationPrelude
 import HttpPipeline
 import Logging
 import LoggingDependencies
+import MemberwiseInit
 import Models
 import Tagged
 import UrlFormEncoding
@@ -15,15 +16,17 @@ import UrlFormEncoding
   import FoundationNetworking
 #endif
 
+@MemberwiseInit(.public)
 public struct Client {
   public typealias ApiKey = Tagged<(Self, apiKey: ()), String>
   public typealias Domain = Tagged<(Self, domain: ()), String>
 
-  private let appSecret: AppSecret
+  @Init(.public) private let appSecret: AppSecret
 
   public var sendEmail: (Email) async throws -> SendEmailResponse
   public var validate: (EmailAddress) async throws -> Validation
 
+  @MemberwiseInit(.public)
   public struct Validation: Codable {
     public var mailboxVerification: Bool
 
@@ -31,25 +34,11 @@ public struct Client {
       case mailboxVerification = "mailbox_verification"
     }
 
-    public init(mailboxVerification: Bool) {
-      self.mailboxVerification = mailboxVerification
-    }
-
     public init(from decoder: Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
       self.mailboxVerification =
         Bool(try container.decode(String.self, forKey: .mailboxVerification)) ?? false
     }
-  }
-
-  public init(
-    appSecret: AppSecret,
-    sendEmail: @escaping (Email) async throws -> SendEmailResponse,
-    validate: @escaping (EmailAddress) async throws -> Validation
-  ) {
-    self.appSecret = appSecret
-    self.sendEmail = sendEmail
-    self.validate = validate
   }
 
   public init(

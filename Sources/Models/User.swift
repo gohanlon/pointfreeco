@@ -2,9 +2,11 @@ import Either
 import EmailAddress
 import Foundation
 import GitHub
+import MemberwiseInit
 import Stripe
 import Tagged
 
+@MemberwiseInit(.public)
 public struct User: Decodable, Equatable, Identifiable {
   public var email: EmailAddress
   public var episodeCreditCount: Int
@@ -17,32 +19,6 @@ public struct User: Decodable, Equatable, Identifiable {
   public var referrerId: ID?
   public var rssSalt: RssSalt
   public var subscriptionId: Subscription.ID?
-
-  public init(
-    email: EmailAddress,
-    episodeCreditCount: Int,
-    gitHubUserId: GitHubUser.ID,
-    gitHubAccessToken: String,
-    id: ID,
-    isAdmin: Bool,
-    name: String?,
-    referralCode: ReferralCode,
-    referrerId: ID?,
-    rssSalt: RssSalt,
-    subscriptionId: Subscription.ID?
-  ) {
-    self.email = email
-    self.episodeCreditCount = episodeCreditCount
-    self.gitHubUserId = gitHubUserId
-    self.gitHubAccessToken = gitHubAccessToken
-    self.id = id
-    self.isAdmin = isAdmin
-    self.name = name
-    self.referralCode = referralCode
-    self.referrerId = referrerId
-    self.rssSalt = rssSalt
-    self.subscriptionId = subscriptionId
-  }
 
   public typealias ReferralCode = Tagged<(Self, referralCode: ()), String>
   public typealias RssSalt = Tagged<(Self, rssSalt: ()), String>

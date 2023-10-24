@@ -1,14 +1,11 @@
+import MemberwiseInit
 import Stripe
 import TaggedMoney
 
+@MemberwiseInit(.public)
 public struct Pricing: Equatable {
   public var billing: Billing
   public var quantity: Int
-
-  public init(billing: Billing, quantity: Int) {
-    self.billing = billing
-    self.quantity = quantity
-  }
 
   public static let `default` = Pricing(billing: .monthly, quantity: 1)
 

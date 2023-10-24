@@ -1,3 +1,6 @@
+import MemberwiseInit
+
+@MemberwiseInit(.public)
 public struct Flash: Codable, Equatable {
   public enum Priority: String, Codable {
     case error
@@ -5,14 +8,6 @@ public struct Flash: Codable, Equatable {
     case warning
   }
 
-  public let message: String
-  public let priority: Priority
-
-  public init(
-    _ priority: Priority,
-    _ message: String
-  ) {
-    self.priority = priority
-    self.message = message
-  }
+  @Init(label: "_") public let priority: Priority
+  @Init(label: "_") public let message: String
 }

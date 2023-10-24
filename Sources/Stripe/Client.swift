@@ -5,6 +5,7 @@ import EmailAddress
 import Foundation
 import FoundationPrelude
 import Logging
+import MemberwiseInit
 import Prelude
 import Tagged
 import TaggedMoney
@@ -14,6 +15,7 @@ import UrlFormEncoding
   import FoundationNetworking
 #endif
 
+@MemberwiseInit(.public)
 public struct Client {
   public var attachPaymentMethod: (PaymentMethod.ID, Customer.ID) async throws -> PaymentMethod
   public var cancelSubscription: (Subscription.ID, _ immediately: Bool) async throws -> Subscription
@@ -45,92 +47,14 @@ public struct Client {
   public var updateSubscription: (Subscription, Plan.ID, Int) async throws -> Subscription
   public var js: String
 
-  public init(
-    attachPaymentMethod: @escaping (PaymentMethod.ID, Customer.ID) async throws -> PaymentMethod,
-    cancelSubscription: @escaping (Subscription.ID, _ immediately: Bool) async throws ->
-      Subscription,
-    confirmPaymentIntent: @escaping (PaymentIntent.ID) async throws -> PaymentIntent,
-    createCoupon: @escaping (Coupon.Duration?, _ maxRedemptions: Int?, _ name: String?, Coupon.Rate)
-      async throws -> Coupon,
-    createCustomer: @escaping (
-      PaymentMethod.ID?, String?, EmailAddress?, Customer.Vat?, Cents<Int>?
-    ) async throws -> Customer,
-    createPaymentIntent: @escaping (CreatePaymentIntentRequest) async throws -> PaymentIntent,
-    createSubscription: @escaping (Customer.ID, Plan.ID, Int, Coupon.ID?) async throws ->
-      Subscription,
-    deleteCoupon: @escaping (Coupon.ID) async throws -> Void,
-    fetchCoupon: @escaping (Coupon.ID) async throws -> Coupon,
-    fetchCustomer: @escaping (Customer.ID) async throws -> Customer,
-    fetchCustomerPaymentMethods: @escaping (Customer.ID) async throws -> ListEnvelope<
-      PaymentMethod
-    >,
-    fetchInvoice: @escaping (Invoice.ID) async throws -> Invoice,
-    fetchInvoices: @escaping (Customer.ID, Invoice.Status) async throws -> ListEnvelope<Invoice>,
-    fetchPaymentIntent: @escaping (PaymentIntent.ID) async throws -> PaymentIntent,
-    fetchPaymentMethod: @escaping (PaymentMethod.ID) async throws -> PaymentMethod,
-    fetchPlans: @escaping () async throws -> ListEnvelope<Plan>,
-    fetchPlan: @escaping (Plan.ID) async throws -> Plan,
-    fetchSubscription: @escaping (Subscription.ID) async throws -> Subscription,
-    fetchUpcomingInvoice: @escaping (Customer.ID) async throws -> Invoice,
-    invoiceCustomer: @escaping (Customer.ID) async throws -> Invoice,
-    payInvoice: @escaping (Invoice.ID) async throws -> Invoice,
-    updateCustomer: @escaping (Customer.ID, PaymentMethod.ID) async throws -> Customer,
-    updateCustomerBalance: @escaping (Customer.ID, Cents<Int>) async throws -> Customer,
-    updateCustomerExtraInvoiceInfo: @escaping (Customer.ID, String) async throws -> Customer,
-    updateSubscription: @escaping (Subscription, Plan.ID, Int) async throws -> Subscription,
-    js: String
-  ) {
-    self.attachPaymentMethod = attachPaymentMethod
-    self.cancelSubscription = cancelSubscription
-    self.confirmPaymentIntent = confirmPaymentIntent
-    self.createCoupon = createCoupon
-    self.createCustomer = createCustomer
-    self.createPaymentIntent = createPaymentIntent
-    self.createSubscription = createSubscription
-    self.deleteCoupon = deleteCoupon
-    self.fetchCoupon = fetchCoupon
-    self.fetchCustomer = fetchCustomer
-    self.fetchCustomerPaymentMethods = fetchCustomerPaymentMethods
-    self.fetchInvoice = fetchInvoice
-    self.fetchInvoices = fetchInvoices
-    self.fetchPaymentIntent = fetchPaymentIntent
-    self.fetchPaymentMethod = fetchPaymentMethod
-    self.fetchPlans = fetchPlans
-    self.fetchPlan = fetchPlan
-    self.fetchSubscription = fetchSubscription
-    self.fetchUpcomingInvoice = fetchUpcomingInvoice
-    self.payInvoice = payInvoice
-    self.invoiceCustomer = invoiceCustomer
-    self.updateCustomer = updateCustomer
-    self.updateCustomerBalance = updateCustomerBalance
-    self.updateCustomerExtraInvoiceInfo = updateCustomerExtraInvoiceInfo
-    self.updateSubscription = updateSubscription
-    self.js = js
-  }
-
+  @MemberwiseInit(.public)
   public struct CreatePaymentIntentRequest {
     public var amount: Cents<Int>
     public var currency: Currency
     public var description: String?
-    public var paymentMethodID: PaymentMethod.ID?
+    public var paymentMethodID: PaymentMethod.ID? = nil
     public var receiptEmail: String?
     public var statementDescriptorSuffix: String?
-
-    public init(
-      amount: Cents<Int>,
-      currency: Currency,
-      description: String?,
-      paymentMethodID: PaymentMethod.ID? = nil,
-      receiptEmail: String?,
-      statementDescriptorSuffix: String?
-    ) {
-      self.amount = amount
-      self.currency = currency
-      self.description = description
-      self.paymentMethodID = paymentMethodID
-      self.receiptEmail = receiptEmail
-      self.statementDescriptorSuffix = statementDescriptorSuffix
-    }
   }
 }
 

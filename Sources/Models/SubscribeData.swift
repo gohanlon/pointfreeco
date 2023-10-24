@@ -1,6 +1,8 @@
 import EmailAddress
+import MemberwiseInit
 import Stripe
 
+@MemberwiseInit(.public)
 public struct SubscribeData: Equatable {
   public var coupon: Coupon.ID?
   public var isOwnerTakingSeat: Bool
@@ -10,26 +12,6 @@ public struct SubscribeData: Equatable {
   public var subscriptionID: Stripe.Subscription.ID?
   public var teammates: [EmailAddress]
   public var useRegionalDiscount: Bool
-
-  public init(
-    coupon: Coupon.ID?,
-    isOwnerTakingSeat: Bool,
-    paymentMethodID: PaymentMethod.ID,
-    pricing: Pricing,
-    referralCode: User.ReferralCode?,
-    subscriptionID: Stripe.Subscription.ID?,
-    teammates: [EmailAddress],
-    useRegionalDiscount: Bool
-  ) {
-    self.coupon = coupon
-    self.isOwnerTakingSeat = isOwnerTakingSeat
-    self.paymentMethodID = paymentMethodID
-    self.pricing = pricing
-    self.referralCode = referralCode
-    self.subscriptionID = subscriptionID
-    self.teammates = teammates
-    self.useRegionalDiscount = useRegionalDiscount
-  }
 
   public enum CodingKeys: String, CodingKey {
     case coupon

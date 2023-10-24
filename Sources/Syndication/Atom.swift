@@ -1,46 +1,28 @@
 import Foundation
 import Html
+import MemberwiseInit
 
+@MemberwiseInit(.public)
 public struct AtomAuthor {
   public var email: String
   public var name: String
-
-  public init(email: String, name: String) {
-    self.email = email
-    self.name = name
-  }
 }
 
+@MemberwiseInit(.public)
 public struct AtomEntry {
   public var content: Node
   public var siteUrl: String
   public var title: String
   public var updated: Date
-
-  public init(content: Node, siteUrl: String, title: String, updated: Date) {
-    self.title = title
-    self.siteUrl = siteUrl
-    self.updated = updated
-    self.content = content
-  }
 }
 
+@MemberwiseInit(.public)
 public struct AtomFeed {
   public var atomUrl: String
   public var author: AtomAuthor
   public var entries: [AtomEntry]
   public var siteUrl: String
   public var title: String
-
-  public init(
-    atomUrl: String, author: AtomAuthor, entries: [AtomEntry], siteUrl: String, title: String
-  ) {
-    self.atomUrl = atomUrl
-    self.author = author
-    self.entries = entries
-    self.siteUrl = siteUrl
-    self.title = title
-  }
 }
 
 public func atomLayout(atomFeed: AtomFeed) -> Node {

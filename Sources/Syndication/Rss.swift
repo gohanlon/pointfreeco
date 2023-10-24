@@ -1,7 +1,9 @@
 import Foundation
 import Html
+import MemberwiseInit
 import Models
 
+@MemberwiseInit(.public)
 public struct RssChannel {
   public var copyright: String
   public var description: String
@@ -11,40 +13,14 @@ public struct RssChannel {
   public var link: String
   public var title: String
 
-  public init(
-    copyright: String,
-    description: String,
-    image: Image,
-    itunes: Itunes?,
-    language: String,
-    link: String,
-    title: String
-  ) {
-    self.copyright = copyright
-    self.description = description
-    self.image = image
-    self.itunes = itunes
-    self.language = language
-    self.link = link
-    self.title = title
-  }
-
+  @MemberwiseInit(.public)
   public struct Image {
     public var link: String
     public var title: String
     public var url: String
-
-    public init(
-      link: String,
-      title: String,
-      url: String
-    ) {
-      self.link = link
-      self.title = title
-      self.url = url
-    }
   }
 
+  @MemberwiseInit(.public)
   public struct Itunes {
     public var author: String
     public var block: Block
@@ -57,30 +33,6 @@ public struct RssChannel {
     public var summary: String
     public var type: ChannelType
 
-    public init(
-      author: String,
-      block: Block,
-      categories: [Category],
-      explicit: Bool,
-      keywords: [String],
-      image: Image,
-      owner: Owner,
-      subtitle: String,
-      summary: String,
-      type: ChannelType
-    ) {
-      self.author = author
-      self.block = block
-      self.categories = categories
-      self.explicit = explicit
-      self.keywords = keywords
-      self.image = image
-      self.owner = owner
-      self.subtitle = subtitle
-      self.summary = summary
-      self.type = type
-    }
-
     public enum Block: String {
       case yes
       case no
@@ -91,42 +43,26 @@ public struct RssChannel {
       case serial
     }
 
+    @MemberwiseInit(.public)
     public struct Image {
       public var href: String
-
-      public init(href: String) {
-        self.href = href
-      }
     }
 
+    @MemberwiseInit(.public)
     public struct Category {
       public var name: String
       public var subcategory: String
-
-      public init(
-        name: String,
-        subcategory: String
-      ) {
-        self.name = name
-        self.subcategory = subcategory
-      }
     }
 
+    @MemberwiseInit(.public)
     public struct Owner {
       public var email: String
       public var name: String
-
-      public init(
-        email: String,
-        name: String
-      ) {
-        self.email = email
-        self.name = name
-      }
     }
   }
 }
 
+@MemberwiseInit(.public)
 public struct RssItem {
   public var description: String
   public var dublinCore: DublinCore?
@@ -138,52 +74,19 @@ public struct RssItem {
   public var pubDate: Date
   public var title: String
 
-  public init(
-    description: String,
-    dublinCore: DublinCore?,
-    enclosure: Enclosure?,
-    guid: String,
-    itunes: Itunes?,
-    link: String,
-    media: Media?,
-    pubDate: Date,
-    title: String
-  ) {
-    self.description = description
-    self.dublinCore = dublinCore
-    self.enclosure = enclosure
-    self.guid = guid
-    self.itunes = itunes
-    self.link = link
-    self.media = media
-    self.pubDate = pubDate
-    self.title = title
-  }
-
+  @MemberwiseInit(.public)
   public struct DublinCore {
     public var creators: [String]
-
-    public init(creators: [String]) {
-      self.creators = creators
-    }
   }
 
+  @MemberwiseInit(.public)
   public struct Enclosure {
     public var length: Int
     public var type: String
     public var url: String
-
-    public init(
-      length: Int,
-      type: String,
-      url: String
-    ) {
-      self.length = length
-      self.type = type
-      self.url = url
-    }
   }
 
+  @MemberwiseInit(.public)
   public struct Itunes {
     public var author: String
     public var duration: Int
@@ -196,30 +99,6 @@ public struct RssItem {
     public var season: Int
     public var title: String
 
-    public init(
-      author: String,
-      duration: Int,
-      episode: Episode.Sequence,
-      episodeType: EpisodeType,
-      explicit: Bool,
-      image: String,
-      subtitle: String,
-      summary: String,
-      season: Int,
-      title: String
-    ) {
-      self.author = author
-      self.duration = duration
-      self.episode = episode
-      self.episodeType = episodeType
-      self.explicit = explicit
-      self.image = image
-      self.subtitle = subtitle
-      self.summary = summary
-      self.season = season
-      self.title = title
-    }
-
     public enum EpisodeType: String {
       case bonus
       case full
@@ -227,35 +106,17 @@ public struct RssItem {
     }
   }
 
+  @MemberwiseInit(.public)
   public struct Media {
     public var content: Content
     public var title: String
 
-    public init(
-      content: Content,
-      title: String
-    ) {
-      self.content = content
-      self.title = title
-    }
-
+    @MemberwiseInit(.public)
     public struct Content {
       public var length: Int
       public var medium: String
       public var type: String
       public var url: String
-
-      public init(
-        length: Int,
-        medium: String,
-        type: String,
-        url: String
-      ) {
-        self.length = length
-        self.medium = medium
-        self.type = type
-        self.url = url
-      }
     }
   }
 }

@@ -4,6 +4,7 @@ import Either
 import Foundation
 import FunctionalCss
 import Html
+import MemberwiseInit
 import Models
 import PointFreePrelude
 import PointFreeRouter
@@ -1458,6 +1459,7 @@ let blockSelectClass =
   | Class.pf.colors.border.gray800
   | Class.type.fontFamily.inherit
 
+@MemberwiseInit(.public)
 public struct AccountData {
   public let currentUser: User
   public let emailSettings: [EmailSetting]
@@ -1470,32 +1472,6 @@ public struct AccountData {
   public let teamInvites: [TeamInvite]
   public let teammates: [User]
   public let upcomingInvoice: Stripe.Invoice?
-
-  public init(
-    currentUser: User,
-    emailSettings: [EmailSetting],
-    episodeCredits: [EpisodeCredit],
-    paymentMethod: Either<any CardProtocol, PaymentMethod>?,
-    stripeSubscription: Stripe.Subscription?,
-    subscriberState: SubscriberState,
-    subscription: Models.Subscription?,
-    subscriptionOwner: User?,
-    teamInvites: [TeamInvite],
-    teammates: [User],
-    upcomingInvoice: Stripe.Invoice?
-  ) {
-    self.currentUser = currentUser
-    self.emailSettings = emailSettings
-    self.episodeCredits = episodeCredits
-    self.paymentMethod = paymentMethod
-    self.stripeSubscription = stripeSubscription
-    self.subscriberState = subscriberState
-    self.subscription = subscription
-    self.subscriptionOwner = subscriptionOwner
-    self.teamInvites = teamInvites
-    self.teammates = teammates
-    self.upcomingInvoice = upcomingInvoice
-  }
 
   public var isSubscriptionOwner: Bool {
     return self.currentUser.id == self.subscriptionOwner?.id

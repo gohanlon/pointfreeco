@@ -1,5 +1,6 @@
 import Either
 import Foundation
+import MemberwiseInit
 import Tagged
 import TaggedMoney
 
@@ -45,6 +46,7 @@ extension Source.Card: CardProtocol {
   public var cardCountry: Country? { self.country }
 }
 
+@MemberwiseInit(.public)
 public struct Card: Codable, Equatable, Identifiable {
   public var brand: Brand
   public var country: Country?
@@ -53,24 +55,6 @@ public struct Card: Codable, Equatable, Identifiable {
   public var id: StripeID<Self>
   public var last4: String
   public var object: Object
-
-  public init(
-    brand: Brand,
-    country: Country,
-    expMonth: Int,
-    expYear: Int,
-    id: ID,
-    last4: String,
-    object: Object
-  ) {
-    self.brand = brand
-    self.country = country
-    self.expMonth = expMonth
-    self.expYear = expYear
-    self.id = id
-    self.last4 = last4
-    self.object = object
-  }
 
   public enum Object: String, Codable { case card }
 
@@ -93,26 +77,19 @@ public struct Card: Codable, Equatable, Identifiable {
   }
 }
 
+@MemberwiseInit(.public)
 public struct Charge: Codable, Equatable, Identifiable {
   public var amount: Cents<Int>
   public var id: StripeID<Self>
   public var paymentMethodDetails: PaymentMethodDetails
 
-  public init(amount: Cents<Int>, id: ID, paymentMethodDetails: PaymentMethodDetails) {
-    self.amount = amount
-    self.id = id
-    self.paymentMethodDetails = paymentMethodDetails
-  }
-
+  @MemberwiseInit(.public)
   public struct PaymentMethodDetails: Codable, Equatable {
-    public var card: PaymentMethod.Card?
-
-    public init(card: PaymentMethod.Card? = nil) {
-      self.card = card
-    }
+    public var card: PaymentMethod.Card? = nil
   }
 }
 
+//@MemberwiseInit(.public)  // 🛑 Circular reference resolving attached macro 'MemberwiseInit'
 public struct Coupon: Equatable, Identifiable {
   public var duration: Duration
   public var id: StripeID<Self>
@@ -172,9 +149,10 @@ public struct Coupon: Equatable, Identifiable {
   }
 }
 
+//@MemberwiseInit(.public)  // 🛑 Circular reference resolving attached macro 'MemberwiseInit'
 public struct Source: Codable, Equatable, Identifiable {
   public var id: StripeID<Self>
-  public var card: Card?
+  public var card: Card? = nil
   public var object: Object
 
   public enum Object: String, Codable { case source }
@@ -185,26 +163,14 @@ public struct Source: Codable, Equatable, Identifiable {
     self.object = object
   }
 
+  // Note: Before @MemberwiseInit, manual `init` had non-optional `country: Country` parameter for optional property. Deliberate?
+  @MemberwiseInit(.public)
   public struct Card: Codable, Equatable {
     public var brand: Stripe.Card.Brand
     public var country: Country?
     public var expMonth: Int
     public var expYear: Int
     public var last4: String
-
-    public init(
-      brand: Stripe.Card.Brand,
-      country: Country,
-      expMonth: Int,
-      expYear: Int,
-      last4: String
-    ) {
-      self.brand = brand
-      self.country = country
-      self.expMonth = expMonth
-      self.expYear = expYear
-      self.last4 = last4
-    }
   }
 }
 
@@ -212,6 +178,7 @@ public enum Currency: String, Codable {
   case usd
 }
 
+@MemberwiseInit(.public)
 public struct Customer: Codable, Equatable, Identifiable {
   public var balance: Cents<Int>
   public var businessVatId: Vat?
@@ -224,36 +191,15 @@ public struct Customer: Codable, Equatable, Identifiable {
     self.defaultSource?.either({ $0.right }, { $0.right?.card })
   }
 
-  public init(
-    balance: Cents<Int>,
-    businessVatId: Vat?,
-    defaultSource: Either<Expandable<Card>, Expandable<Source>>?,
-    id: ID,
-    invoiceSettings: InvoiceSettings,
-    metadata: [String: String]
-  ) {
-    self.balance = balance
-    self.businessVatId = businessVatId
-    self.defaultSource = defaultSource
-    self.id = id
-    self.invoiceSettings = invoiceSettings
-    self.metadata = metadata
-  }
-
   public typealias Vat = Tagged<(Self, vat: ()), String>
 
   public var extraInvoiceInfo: String? {
     return self.metadata["extraInvoiceInfo"]
   }
 
+  @MemberwiseInit(.public)
   public struct InvoiceSettings: Codable, Equatable {
     public var defaultPaymentMethod: PaymentMethod.ID?
-
-    public init(
-      defaultPaymentMethod: PaymentMethod.ID?
-    ) {
-      self.defaultPaymentMethod = defaultPaymentMethod
-    }
   }
 
   public var hasPaymentInfo: Bool {
@@ -261,47 +207,30 @@ public struct Customer: Codable, Equatable, Identifiable {
   }
 }
 
+@MemberwiseInit(.public)
 public struct Discount: Codable, Equatable {
   public var coupon: Coupon
-
-  public init(coupon: Coupon) {
-    self.coupon = coupon
-  }
 }
 
+@MemberwiseInit(.public)
 public struct StripeErrorEnvelope: Codable, Error {
   public var error: StripeError
-
-  public init(error: StripeError) {
-    self.error = error
-  }
 }
 
+@MemberwiseInit(.public)
 public struct StripeError: Codable, Error {
   public var message: String
-
-  public init(message: String) {
-    self.message = message
-  }
 }
 
+@MemberwiseInit(.public)
 public struct Event<T: Codable & Equatable>: Equatable, Codable, Identifiable {
   public var data: Data
   public var id: StripeID<Self>
   public var type: `Type`
 
-  public init(data: Data, id: ID, type: `Type`) {
-    self.data = data
-    self.id = id
-    self.type = type
-  }
-
+  @MemberwiseInit(.public)
   public struct Data: Codable, Equatable {
     public var object: T
-
-    public init(object: T) {
-      self.object = object
-    }
   }
 
   public enum `Type`: String, Codable, Equatable {
@@ -313,6 +242,7 @@ public struct Event<T: Codable & Equatable>: Equatable, Codable, Identifiable {
   }
 }
 
+@MemberwiseInit(.public)
 public struct Invoice: Codable, Equatable {
   public typealias ID = StripeID<Self>
 
@@ -334,44 +264,6 @@ public struct Invoice: Codable, Equatable {
   public var subtotal: Cents<Int>
   public var total: Cents<Int>
 
-  public init(
-    amountDue: Cents<Int>,
-    amountPaid: Cents<Int>,
-    charge: Expandable<Charge>?,
-    created: Date,
-    customer: Customer.ID,
-    discount: Discount?,
-    id: ID?,
-    invoicePdf: String?,
-    lines: ListEnvelope<LineItem>,
-    number: Number?,
-    paymentIntent: Expandable<PaymentIntent>?,
-    periodStart: Date,
-    periodEnd: Date,
-    status: Status,
-    subscription: Subscription.ID?,
-    subtotal: Cents<Int>,
-    total: Cents<Int>
-  ) {
-    self.amountDue = amountDue
-    self.amountPaid = amountPaid
-    self.charge = charge
-    self.created = created
-    self.customer = customer
-    self.discount = discount
-    self.id = id
-    self.invoicePdf = invoicePdf
-    self.lines = lines
-    self.number = number
-    self.paymentIntent = paymentIntent
-    self.periodStart = periodStart
-    self.periodEnd = periodEnd
-    self.status = status
-    self.subscription = subscription
-    self.subtotal = subtotal
-    self.total = total
-  }
-
   public typealias Number = Tagged<(Self, number: ()), String>
 
   public enum Status: String, Codable {
@@ -383,6 +275,7 @@ public struct Invoice: Codable, Equatable {
   }
 }
 
+@MemberwiseInit(.public)
 public struct LineItem: Codable, Equatable, Identifiable {
   public var amount: Cents<Int>
   public var description: String?
@@ -390,54 +283,21 @@ public struct LineItem: Codable, Equatable, Identifiable {
   public var plan: Plan?
   public var quantity: Int
   public var subscription: Subscription.ID?
-
-  public init(
-    amount: Cents<Int>,
-    description: String?,
-    id: ID,
-    plan: Plan?,
-    quantity: Int,
-    subscription: Subscription.ID?
-  ) {
-    self.amount = amount
-    self.description = description
-    self.id = id
-    self.plan = plan
-    self.quantity = quantity
-    self.subscription = subscription
-  }
 }
 
+@MemberwiseInit(.public)
 public struct ListEnvelope<A: Codable & Equatable>: Codable, Equatable {
   public var data: [A]
   public var hasMore: Bool
-
-  public init(data: [A], hasMore: Bool) {
-    self.data = data
-    self.hasMore = hasMore
-  }
 }
 
+@MemberwiseInit(.public)
 public struct PaymentIntent: Codable, Equatable, Identifiable {
   public var amount: Cents<Int>
   public var clientSecret: ClientSecret
   public var currency: Currency
   public var id: StripeID<Self>
   public var status: Status
-
-  public init(
-    amount: Cents<Int>,
-    clientSecret: ClientSecret,
-    currency: Currency,
-    id: ID,
-    status: Status
-  ) {
-    self.amount = amount
-    self.clientSecret = clientSecret
-    self.currency = currency
-    self.id = id
-    self.status = status
-  }
 
   public typealias ClientSecret = Tagged<(Self, secret: ()), String>
 
@@ -455,9 +315,10 @@ public struct PaymentIntent: Codable, Equatable, Identifiable {
 public enum CountryTag {}
 public typealias Country = Tagged<CountryTag, String>
 
+//@MemberwiseInit(.public)  // 🛑 Circular reference resolving attached macro 'MemberwiseInit'
 public struct PaymentMethod: Codable, Equatable, Identifiable {
-  public var card: Card?
-  public var customer: Expandable<Customer>?
+  public var card: Card? = nil
+  public var customer: Expandable<Customer>? = nil
   public var id: StripeID<Self>
 
   public init(
@@ -470,6 +331,7 @@ public struct PaymentMethod: Codable, Equatable, Identifiable {
     self.id = id
   }
 
+  @MemberwiseInit(.public)
   public struct Card: Codable, Equatable {
     public var brand: Brand
     public var country: Country
@@ -477,22 +339,6 @@ public struct PaymentMethod: Codable, Equatable, Identifiable {
     public var expYear: Int
     public var funding: Funding
     public var last4: String
-
-    public init(
-      brand: Brand,
-      country: Country,
-      expMonth: Int,
-      expYear: Int,
-      funding: Funding,
-      last4: String
-    ) {
-      self.brand = brand
-      self.country = country
-      self.expMonth = expMonth
-      self.expYear = expYear
-      self.funding = funding
-      self.last4 = last4
-    }
 
     public enum Brand: String, Codable, Equatable {
       case amex
@@ -532,6 +378,7 @@ public struct PaymentMethod: Codable, Equatable, Identifiable {
   }
 }
 
+@MemberwiseInit(.public)
 public struct Plan: Codable, Equatable, Identifiable {
   public var created: Date
   public var currency: Currency
@@ -539,22 +386,6 @@ public struct Plan: Codable, Equatable, Identifiable {
   public var interval: Interval
   public var metadata: [String: String]
   public var nickname: String?
-
-  public init(
-    created: Date,
-    currency: Currency,
-    id: ID,
-    interval: Interval,
-    metadata: [String: String],
-    nickname: String?
-  ) {
-    self.created = created
-    self.currency = currency
-    self.id = id
-    self.interval = interval
-    self.metadata = metadata
-    self.nickname = nickname
-  }
 
   public enum Interval: String, Codable {
     case month
@@ -566,6 +397,7 @@ public struct Plan: Codable, Equatable, Identifiable {
   }
 }
 
+@MemberwiseInit(.public)
 public struct Subscription: Codable, Equatable, Identifiable {
   public var canceledAt: Date?
   public var cancelAtPeriodEnd: Bool
@@ -583,40 +415,6 @@ public struct Subscription: Codable, Equatable, Identifiable {
   public var startDate: Date
   public var status: Status
 
-  public init(
-    canceledAt: Date?,
-    cancelAtPeriodEnd: Bool,
-    created: Date,
-    currentPeriodStart: Date,
-    currentPeriodEnd: Date,
-    customer: Expandable<Customer>,
-    discount: Discount?,
-    endedAt: Date?,
-    id: ID,
-    items: ListEnvelope<Item>,
-    latestInvoice: Either<Invoice.ID, Invoice>?,
-    plan: Plan,
-    quantity: Int,
-    startDate: Date,
-    status: Status
-  ) {
-    self.canceledAt = canceledAt
-    self.cancelAtPeriodEnd = cancelAtPeriodEnd
-    self.created = created
-    self.currentPeriodStart = currentPeriodStart
-    self.currentPeriodEnd = currentPeriodEnd
-    self.customer = customer
-    self.discount = discount
-    self.endedAt = endedAt
-    self.id = id
-    self.items = items
-    self.latestInvoice = latestInvoice
-    self.plan = plan
-    self.quantity = quantity
-    self.startDate = startDate
-    self.status = status
-  }
-
   public var isCanceling: Bool {
     return self.status == .active && self.cancelAtPeriodEnd
   }
@@ -629,6 +427,7 @@ public struct Subscription: Codable, Equatable, Identifiable {
     return self.status != .canceled && !self.cancelAtPeriodEnd
   }
 
+  @MemberwiseInit(.public)
   public struct Item: Codable, Equatable, Identifiable {
     public typealias ID = StripeID<Self>
 
@@ -636,18 +435,6 @@ public struct Subscription: Codable, Equatable, Identifiable {
     public var id: ID
     public var plan: Plan
     public var quantity: Int
-
-    public init(
-      created: Date,
-      id: ID,
-      plan: Plan,
-      quantity: Int
-    ) {
-      self.created = created
-      self.id = id
-      self.plan = plan
-      self.quantity = quantity
-    }
   }
 
   public enum Status: String, Codable {

@@ -5,12 +5,14 @@ import Either
 import Foundation
 import FoundationPrelude
 import Logging
+import MemberwiseInit
 import Tagged
 
 #if canImport(FoundationNetworking)
   import FoundationNetworking
 #endif
 
+@MemberwiseInit(.public)
 public struct Client {
   /// Fetches an access token from GitHub from a `code` that was obtained from the callback redirect.
   public var fetchAuthToken: (String) async throws -> Either<OAuthError, AccessToken>
@@ -20,16 +22,6 @@ public struct Client {
 
   /// Fetches a GitHub user from an access token.
   public var fetchUser: (AccessToken) async throws -> GitHubUser
-
-  public init(
-    fetchAuthToken: @escaping (String) async throws -> Either<OAuthError, AccessToken>,
-    fetchEmails: @escaping (AccessToken) async throws -> [GitHubUser.Email],
-    fetchUser: @escaping (AccessToken) async throws -> GitHubUser
-  ) {
-    self.fetchAuthToken = fetchAuthToken
-    self.fetchEmails = fetchEmails
-    self.fetchUser = fetchUser
-  }
 }
 
 extension Client {

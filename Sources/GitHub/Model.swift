@@ -1,29 +1,22 @@
 import EmailAddress
 import Foundation
+import MemberwiseInit
 import Tagged
 
+@MemberwiseInit(.public)
 public struct AccessToken: Codable {
   public var accessToken: String
-
-  public init(accessToken: String) {
-    self.accessToken = accessToken
-  }
 
   private enum CodingKeys: String, CodingKey {
     case accessToken = "access_token"
   }
 }
 
+@MemberwiseInit(.public)
 public struct OAuthError: Codable {
   public var description: String
   public var error: Error
   public var errorUri: String
-
-  public init(description: String, error: Error, errorUri: String) {
-    self.description = description
-    self.error = error
-    self.errorUri = errorUri
-  }
 
   public enum Error: String, Codable {
     /// <https://developer.github.com/apps/managing-oauth-apps/troubleshooting-oauth-app-access-token-request-errors/#bad-verification-code>
@@ -37,25 +30,16 @@ public struct OAuthError: Codable {
   }
 }
 
+@MemberwiseInit(.public)
 public struct GitHubUser: Codable, Identifiable {
   public var createdAt: Date
   public var id: Tagged<Self, Int>
   public var name: String?
 
-  public init(createdAt: Date, id: ID, name: String?) {
-    self.createdAt = createdAt
-    self.id = id
-    self.name = name
-  }
-
+  @MemberwiseInit(.public)
   public struct Email: Codable {
     public var email: EmailAddress
     public var primary: Bool
-
-    public init(email: EmailAddress, primary: Bool) {
-      self.email = email
-      self.primary = primary
-    }
   }
 
   private enum CodingKeys: String, CodingKey {
@@ -65,12 +49,8 @@ public struct GitHubUser: Codable, Identifiable {
   }
 }
 
+@MemberwiseInit(.public)
 public struct GitHubUserEnvelope: Codable {
   public var accessToken: AccessToken
   public var gitHubUser: GitHubUser
-
-  public init(accessToken: AccessToken, gitHubUser: GitHubUser) {
-    self.accessToken = accessToken
-    self.gitHubUser = gitHubUser
-  }
 }
